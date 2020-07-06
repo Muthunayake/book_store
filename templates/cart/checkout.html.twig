@@ -1,0 +1,84 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Book Shop | Checkout{% endblock %}
+
+{% block stylesheets %}
+    <link href=" {{ asset('css/invoice.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<div id="invoice">
+
+    <div class="toolbar hidden-print">
+        <div class="text-right">
+            <button id="printInvoice" class="btn btn-info" onclick="window.print()"><i class="fa fa-print"></i> Print</button>
+        </div>
+        <hr>
+    </div>
+    <div class="invoice overflow-auto">
+        <div style="min-width: 600px">
+            <main>
+                <div class="row contacts">
+                    <div class="col invoice-to">
+                        <h2 class="to">Book Store</h2>
+                        <div class="address">R. A. De Mel Mawatha, Colombo 00300</div>
+                        <div class="email"><a href="mailto:john@example.com">bookstore@book.com</a></div>
+                    </div>
+                    <div class="col invoice-details">
+                        <h1 class="invoice-id">INVOICE {{ random(1000, 99999) }}</h1>
+                        <div class="date">Date of Invoice: {{ "now"|date("d/m/Y") }}</div>
+                    </div>
+                </div>
+                <table border="0" cellspacing="0" cellpadding="0" class="invoice-details-table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="text-left">THUMBNAIL</th>
+                        <th class="text-left">DESCRIPTION</th>
+                        <th class="text-right">QTY</th>
+                        <th class="text-right">TOTAL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for book in order_books %}
+                    <tr>
+                        <td class="no">{{ loop.index }}</td>
+                        <td class="image">
+                            <a href="{{ path('book.view',{id:book.id}) }}" target="_blank" class="book-link">
+                                <img src="{{book.image}}" class="card-img-top invoice-item-image" alt="No Image Found"
+                                     onerror="this.src='{{ asset('img/book-default.png') }}'">
+                            </a>
+                        </td>
+                        <td class="text-left">
+                            <a href="{{ path('book.view',{id:book.id}) }}" target="_blank" class="book-link">
+                                <h3>{{ book.title }}</h3>
+                            </a>
+                            {{ book.author }} <small>({{ book.category }})</small></td>
+                        <td class="unit">{{ book.qty }}</td>
+                        <td class="total"><small>LKR </small>{{ book.price }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2">SUBTOTAL</td>
+                        <td><small>LKR </small> {{ order_total }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2">DISCOUNT {{ order_discount.rate*100 }}%</td>
+                        <td><small>LKR </small> {{ order_discount.discount }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2">NET TOTAL</td>
+                        <td><small>LKR </small> {{ order_discount.net_amount }}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </main>
+        </div>
+        <div></div>
+    </div>
+</div>
+{% endblock %}

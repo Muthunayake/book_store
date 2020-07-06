@@ -1,0 +1,144 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Book Shop | Cart{% endblock %}
+
+{% block stylesheets %}
+    <link href=" {{ asset('css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-md-center">
+    <div class="col-md-9">
+        <div class="card m-4">
+            <div class="card-body">
+                {% for message in app.flashes('cart_clear_success') %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Cart</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <form method="post" action="{{ path('cart.clear') }}">
+                            <input type="hidden" name="route" value="{{ route }}">
+                            <button class="btn btn-primary btn-sm float-right"><i class="fa fa-times" aria-hidden="true"></i> Clear Cart</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered cart-details">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Thumbnail</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Author</th>
+                                    <th scope="col">Unit Price</th>
+                                    <th scope="col">Qty</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for book in order_books %}
+                                <tr>
+                                    <td scope="row">
+                                        <a href="{{ path('book.view',{id:book.id}) }}" target="_blank" class="book-link">
+                                            <img src="{{book.image}}" class="card-img-top invoice-item-image" alt="No Image Found"
+                                                 onerror="this.src='{{ asset('img/book-default.png') }}'">
+                                        </a>
+                                    </td>
+                                    <td scope="row">
+                                        <a href="{{ path('book.view',{id:book.id}) }}" target="_blank" class="book-link">
+                                            {{ book.title }}
+                                        </a>
+                                    </td>
+                                    <td scope="row">{{ book.author }} <small>({{ book.category }})</small></td>
+                                    <td scope="row"><small>LKR</small> {{ book.price }}</td>
+                                    <td scope="row">
+                                        <form method="post" action="{{ path('cart.addItem',{ id:book.id }) }}">
+                                            <input type="hidden" name="route" value="{{ route }}">
+                                            <input type="hidden" name="qty-type" value="VAL">
+                                            <div class="form-group row">
+                                                <div class="col-md-8">
+                                                    <select class="form-control form-control-sm" name="qty">
+                                                        {% for i in 1..20 %}
+                                                            <option {% if i==book.qty %} selected {% endif %} value="{{ i }}">{{ i }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-1 mr-1">
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <a href="{{ path('cart.remove',{id:book.id,route:route}) }}" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th colspan="3">Disount Code</th>
+                                    <th colspan="2">
+                                        <form method="post" action="{{ path('cart.promostion_code') }}">
+                                            <input type="hidden" name="route" value="{{ route }}">
+                                           <div class="form-group row">
+                                               <div class="col-md-7">
+                                                   <input type="text" value="{{ order_discount.code }}" name="code" class="form-control form-control-sm" placeholder="Discount Code"
+                                                   maxlength="10" size="10" minlength="10">
+                                               </div>
+                                               <div class="col-md-4">
+                                                   <button type="submit" class="btn btn-secoundary btn-sm">
+                                                       <i class="fa fa-check" aria-hidden="true"></i> Confirm the Code
+                                                   </button>
+                                               </div>
+                                           </div>
+                                       </form>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3">Total</th>
+                                    <th colspan="2">
+                                        <small>LKR</small> {{ order_total }}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3">Discount <small>({{ order_discount.rate *100 }} %)</small></th>
+                                    <th colspan="2">
+                                        <small>LKR</small> {{ order_discount.discount }}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3">Net Amount</th>
+                                    <th colspan="2" class="net-amount">
+                                        <small>LKR</small> {{ order_discount.net_amount }}
+                                    </th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% if cart_count>0 %}
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <a class="btn btn-primary" href="{{ path('cart.checkout') }}"><i class="fa fa-check" aria-hidden="true"></i> Checkout</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

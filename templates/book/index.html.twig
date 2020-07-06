@@ -1,0 +1,59 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Book Shop | Book{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-12 m-5">
+            {% for message in app.flashes('cart.add.success.book.view') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img class="card-img-top" src="{{book.image}}" alt="Card image cap">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">{{ book.description }}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fa fa-book" aria-hidden="true"></i> {{ book.category.category }}</li>
+                            <li class="list-group-item"><i class="fa fa-pencil" aria-hidden="true"></i> {{ book.author }}</li>
+                        </ul>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('cart.addItem',{ id:book.id }) }}">
+                                <input type="hidden" name="route" value="{{ route }}">
+                                <input type="hidden" name="qty-type" value="VAL">
+                                <div class="form-group row">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">
+                                        <a href="javascript:void(0)" class="card-link"><strong><small>LKR</small> {{ book.price }}</strong></a>
+                                    </label>
+                                    <div class="col-md-2">
+                                        <select class="form-control form-control-sm" name="qty">
+                                            {% for i in 1..20 %}
+                                                <option value="{{ i }}">{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary btn-sm"><i class="fa fa-cart-plus" aria-hidden="true"></i> Add to Cart</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

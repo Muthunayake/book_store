@@ -1,0 +1,11 @@
+<!-- Navigation -->
+<nav class="navbar navbar-light bg-light static-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('home') }}"><h3>Book Store</h3></a>
+        <a class="btn btn-danger" href="{{ path('cart.show') }}">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            <span class="ml-1 mr-4 badge badge-light">{{ cart_count }}</span>
+            <span class="ml-1 badge badge-light"> LKR {{ order_total }}</span>
+        </a>
+    </div>
+</nav>

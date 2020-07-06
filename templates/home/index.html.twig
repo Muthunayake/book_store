@@ -1,0 +1,79 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Book Store | Home{% endblock %}
+{% block stylesheets %}
+    <link href=" {{ asset('css/style.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+
+    <div class="row justify-content-md-center pt-4">
+        <div class="col-md-8">
+            {% for message in app.flashes('cart.add.success.home') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-10">
+            <form action="{{ path('home') }}" method="post">
+                <div class="form-group row justify-content-md-center">
+                    <label for="catergory" class="col-md-1 col-form-label">Catergory</label>
+                    <div class="col-md-4">
+                        <select name="category" class="form-control form-control-sm">
+                            <option value="">All</option>
+                            {% for c in categories %}
+                                <option value=" {{ c.id }}"
+                                        {% if selected_category == c.id %}
+                                            selected
+                                        {% endif %}
+                                > {{ c.category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row p-4">
+        {% for book in books %}
+            <div class="col-md-2">
+                <div class="card my-2 card-item">
+                    <a href="{{ path('book.view',{id:book.id}) }}" class="book-link">
+                        <img src="{{book.image}}" class="card-img-top" alt="No Image Found"
+                             onerror="this.src='{{ asset('img/book-default.png') }}'">
+
+                        <div class="card-body p-2">
+                            <h6 class="card-title book-title" data-toggle="tooltip" data-placement="top" title="{{ book.title }}">{{ (book.title|length > 22 ? book.title|slice(0, 22) ~ '…' : book.title)  }}</h6>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item p-2"><i class="fa fa-book" aria-hidden="true"></i> {{ book.category.category }}</li>
+                            <li class="list-group-item p-2"><i class="fa fa-pencil" aria-hidden="true"></i> <small>{{ book.author }}</small></li>
+                        </ul>
+                    </a>
+                    <div class="card-body p-2">
+                        <form method="post" action="{{ path('cart.addItem',{ id:book.id }) }}">
+                            <input type="hidden" name="qty" value="1">
+                            <input type="hidden" name="qty-type" value="IN">
+                            <input type="hidden" name="route" value="{{ route }}">
+                            <a href="javascript:void(0)" class="card-link book-price"> <small>LKR</small> {{ book.price }}</a>
+                            <button class="float-right btn btn-primary btn-sm"><i class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+{% endblock %}
