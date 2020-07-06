@@ -6,3 +6,26 @@ Symfony base shopping cart for bookstore
 
 #Symfony Version
 4.16.5 
+
+# To run the project try floowing steps
+
+# install dependency
+composer update
+
+# run the project
+symfony server:start or php bin/console server:run
+
+# set local db config to .env
+MYSQL_USER=root
+MYSQL_PASSWORD=
+MYSQL_DATABASE=99x_sp_cart_ass
+MYSQL_HOST=127.0.0.1
+
+# create database
+php bin/console doctrine:database:create
+
+# create table
+php bin/console doctrine:schema:update --force
+
+# run sample data
+php bin/console doctrine:fixtures:load
