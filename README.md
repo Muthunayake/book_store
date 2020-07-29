@@ -29,3 +29,5 @@ php bin/console doctrine:fixtures:load
 
 # run the project
 symfony server:start or php bin/console server:run
+
+test 1.2.3
